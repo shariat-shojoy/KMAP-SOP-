@@ -1,8 +1,17 @@
-#include<stdio.h>
-#include<stdlib.h>
+#include "raylib.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <conio.h>
 
-int main(){
 
+
+
+Color color[]={RED,BLUE,GREEN,YELLOW,PURPLE,ORANGE,BROWN,MAROON,WHITE,GOLD};
+
+int main(void)
+{
+    
 
     char col[2][4]={
                     {'a','a','A','A'},
@@ -31,8 +40,13 @@ int main(){
         }
         
     }
-    int lool=1;
+    int lool=0;
+    int ind[16]={0};
+    int ***group = (int ***)malloc(16 * sizeof(int **));
+    
     // symetry check
+
+ 
      
     if(mat[0][0]==1 && mat[0][3]==1 && mat[3][0]==1 && mat[3][3]==1){
         if((mat[0][1]==0 && mat[1][0]==0)||(mat[0][2]==0 && mat[1][3]==0) || (mat[3][1]==0 && mat[2][0]==0) || (mat[3][2]==0 && mat[2][3]==0)){
@@ -43,6 +57,19 @@ int main(){
            
             printf("group lool=%d\n",lool);
             printf("(0,0) (0,3) \n(3,0) (3,3)\n");
+            group[lool] = (int **)malloc(4 * sizeof(int *));
+            for(int q=0;q<4;q++){
+                group[lool-1][q] = (int *)malloc(2 * sizeof(int));
+            }
+            group[lool][0][0]=0;
+            group[lool][0][1]=0;
+            group[lool][1][0]=0;
+            group[lool][1][1]=3;
+            group[lool][2][0]=3;
+            group[lool][2][1]=0;
+            group[lool][3][0]=3;
+            group[lool][3][1]=3;
+            ind[lool]=4;
             res[index++]=row[1][0];
             res[index++]=col[1][3];
             res[index++]='+';
@@ -183,13 +210,26 @@ for(int j=0;j<4;j++){
                     checked[3][i]='c'+lool;
 
                 }
+                group[lool] = (int **)malloc(2*(right-left+1) * sizeof(int *));
+                ind[lool]=2*(right-left+1);
+                for(int q=0;q<2*(right-left+1);q++){
+                    group[lool][q] = (int *)malloc(2 * sizeof(int));
+                }
+                
                 printf("group lool=%d\n",lool);
+                int f_index=0;
                 for(int i=left;i<=right;i++){
                    printf("(%d,%d) ",0,i);
+                   group[lool][f_index][0]=0;
+                   group[lool][f_index][1]=i;
+                   f_index++;
                 }
                 printf("\n");
                 for(int i=left;i<=right;i++){
                    printf("(%d,%d) ",3,i);
+                   group[lool][f_index][0]=3;
+                   group[lool][f_index][1]=i;
+                   f_index++;
                 }
                 printf("\n");
                 char r_t1=row[0][left];
@@ -342,13 +382,25 @@ for(int j=0;j<4;j++){
                     checked[0][i]='c'+lool;
 
                 }
+                group[lool] = (int **)malloc(2*(right1-left1+1) * sizeof(int *));
+                ind[lool] = 2*(right1-left1+1);
+                for(int i=0;i<2*(right1-left1+1);i++){
+                    group[lool][i] = (int *)malloc(2 * sizeof(int));
+                }
                 printf("group lool=%d\n",lool);
+                int s_index=0;
                 for(int i=left1;i<=right1;i++){
                    printf("(%d,%d) ",3,i);
+                   group[lool][s_index][0]=3;
+                   group[lool][s_index][1]=i;
+                   s_index++;
                 }
                 printf("\n");
                 for(int i=left1;i<=right1;i++){
                    printf("(%d,%d) ",0,i);
+                   group[lool][s_index][0]=0;
+                   group[lool][s_index][1]=i;
+                   s_index++;
                 }
                 printf("\n");
 
@@ -507,10 +559,22 @@ if(flg2){
             checked[i][3]='c'+lool;
 
         }
+        group[lool] = (int **)malloc(2*(sdown-sup+1) * sizeof(int *));
+            ind[lool] = 2*(sdown-sup+1);
+        for(int i=0;i<2*(sdown-sup+1);i++){
+            group[lool][i] = (int *)malloc(2 * sizeof(int));
+        }
+        int t_index=0;
         printf("group lool=%d\n",lool);
         for(int i=sup;i<=sdown;i++){
            printf("(%d,%d) ",i,0);
+           group[lool][t_index][0]=i;
+           group[lool][t_index][1]=0;
+           t_index++;
            printf("(%d,%d) ",i,3);
+           group[lool][t_index][0]=i;
+           group[lool][t_index][1]=3;
+           t_index++;
         }
         printf("\n");
         /* for(int i=sup;i<=sdown;i++){
@@ -526,7 +590,7 @@ if(flg2){
             if(c_t1!=col[0][i+1]){
                 c_t1='0';
             }
-            if(c_t2!=row[1][i+1]){
+            if(c_t2!=col[1][i+1]){
                 c_t2='0';
             }
         }
@@ -668,9 +732,23 @@ if(flg2){
 
         }
         printf("group lool=%d\n",lool);
+
+        group[lool] = (int **)malloc(2*(sdown1-sup1+1) * sizeof(int *));
+            ind[lool] = 2*(sdown1-sup1+1);
+        for(int i=0;i<2*(sdown1-sup1+1);i++){
+            group[lool][i] = (int *)malloc(2 * sizeof(int));
+        }
+
+        int fo_index=0;
         for(int i=sup1;i<=sdown1;i++){
            printf("(%d,%d) ",i,0);
+           group[lool][fo_index][0]=i;
+           group[lool][fo_index][1]=0;
+           fo_index++;
            printf("(%d,%d) ",i,3);
+           group[lool][fo_index][0]=i;
+           group[lool][fo_index][1]=3;
+           fo_index++;
         }
         printf("\n");
         /* for(int i=sup;i<=sdown;i++){
@@ -901,6 +979,9 @@ if(flg2){
                     int mx=0;
                     int depth=0;
                     int x1=l,y1=up,x2=r,y2=d;
+                   // printf("up=%d d=%d l=%d r=%d v=%d h=%d \n",up,d,l,r,v,h);
+
+                   // modified in 21-6-25
                 for(int a=up;a<=d;a++){
                     depth++;
                     int len=0;
@@ -928,10 +1009,21 @@ if(flg2){
                     
                 }
                 printf("group lool=%d\n",lool);
+
+                group[lool] = (int **)malloc((y2-y1+1)*(x2-x1+1) * sizeof(int *));
+                ind[lool] = (y2-y1+1)*(x2-x1+1);
+                for(int i=0;i<(y2-y1+1)*(x2-x1+1);i++){
+                group[lool][i] = (int *)malloc(2 * sizeof(int));
+                }
+                int fi_index=0;
                 for(int a1=y1;a1<=y2;a1++){
                     for(int b1=x1;b1<=x2;b1++){
                         checked[a1][b1]='c'+lool;
                         printf("(%d,%d) ",a1,b1);
+                        group[lool][fi_index][0]=a1;
+                        group[lool][fi_index][1]=b1;
+                        fi_index++;
+    
                     }
                     printf("\n");
                 }
@@ -998,12 +1090,76 @@ if(flg2){
     
     }
     
-
+    char ans_str[index-1];
     for(int i=0;i<index-1;i++){
         printf("%c",res[i]);
+        ans_str[i]=res[i];
+        
     }
-    free(res);
+    printf("\n");
+  //  strcpy(ans_str, res);
     
-    
+  printf("groups: \n");
+  int group_ind=0;
+  while(ind[group_ind]!=0){
+    printf("group number: %d\n",group_ind);
+    for(int i=0;i<ind[group_ind];i++){
+        printf("%d,%d \n",group[group_ind][i][0],group[group_ind][i][1]);
+    }
+    group_ind++;
+  }
+
+InitWindow(800, 800, "Matrix Renderer");
+SetTargetFPS(60);
+
+
+    // --- 3) Main loop: draw grid + matrix values + result string ---
+   
+while (!WindowShouldClose())
+    {
+        BeginDrawing();
+        ClearBackground(BLACK);
+
+
+        DrawRectangleLines(200,200,400,400,WHITE);
+        DrawLine(300, 200, 300, 600, WHITE);
+        DrawLine(400, 200, 400, 600, WHITE);
+        DrawLine(500, 200, 500, 600, WHITE);
+        DrawLine(200, 300, 600, 300, WHITE);
+        DrawLine(200, 400, 600, 400, WHITE);
+        DrawLine(200, 500, 600, 500, WHITE);
+
+        for(int i = 0; i < 4; i++){
+            for(int j = 0; j < 4; j++){
+                DrawText(TextFormat("%d", mat[j][i]), 200+40 + i*100, 200+30 + j*100, 40, WHITE);
+            }
+        }
+
+        int drawing_ind=0;
+        int color_index=0;
+        int liner=2;
+        while(ind[drawing_ind]!=0){
+            
+
+            for(int i=0;i<ind[drawing_ind];i++){
+                DrawRectangleLinesEx((Rectangle){200+liner+group[drawing_ind][i][1]*100,200+liner+group[drawing_ind][i][0]*100,100-liner*2,100-liner*2},5,color[color_index]);
+            }
+            drawing_ind++;
+            color_index++;
+            liner+=5;
+        }
+
+        
+        
+        DrawText(TextFormat("%s", ans_str), 200, 700, 40, WHITE);
+
+        // Draw each cell
+        
+        EndDrawing();
+    }
+
+    // --- 4) Cleanup ---
+    CloseWindow();
+     free(res);
     return 0;
 }

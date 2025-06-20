@@ -1,0 +1,26 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build raylib app",
+      "type": "shell",
+      "command": "gcc",
+      "args": [
+        "main.c",
+        "-o",
+        "main.exe",
+        "-I", "D:/raylib/raylib-5.5_win64_mingw-w64/include",
+        "-L", "D:/raylib/raylib-5.5_win64_mingw-w64/lib",
+        "-lraylib",
+        "-lopengl32",
+        "-lgdi32",
+        "-lwinmm"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}

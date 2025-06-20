@@ -1,0 +1,17 @@
+{
+  "configurations": [
+    {
+      "name": "Win32",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "D:/raylib/raylib-5.5_win64_mingw-w64/raylib-5.5_win64_mingw-w64/include"
+      ],
+      "defines": [],
+      "compilerPath": "C:/mingw64/bin/gcc.exe",  // or your actual path
+      "cStandard": "c11",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "windows-gcc-x64"
+    }
+  ],
+  "version": 4
+}
