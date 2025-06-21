@@ -22,6 +22,7 @@ int main(void)
                 {'d','D','D','d'}
             };
     char * res=(char *)malloc(150*sizeof(char));
+    int freq[4][4]={0};
 
     int mat[4][4];
     char checked[4][4];
@@ -55,11 +56,15 @@ int main(void)
             checked[3][0]='c'+lool;
             checked[3][3]='c'+lool;
            
-            printf("group lool=%d\n",lool);
+            printf("group lool=%d\n",lool+1);
             printf("(0,0) (0,3) \n(3,0) (3,3)\n");
+            freq[0][0]++;
+            freq[0][3]++;
+            freq[3][0]++;
+            freq[3][3]++;
             group[lool] = (int **)malloc(4 * sizeof(int *));
             for(int q=0;q<4;q++){
-                group[lool-1][q] = (int *)malloc(2 * sizeof(int));
+                group[lool][q] = (int *)malloc(2 * sizeof(int));
             }
             group[lool][0][0]=0;
             group[lool][0][1]=0;
@@ -166,23 +171,59 @@ for(int j=0;j<4;j++){
                 flg=0;
             }
         } */
+            int uncheked_flag=0;
              if(dif_up<dif_dwn){
                 /* printf("dup %d\n",dif_up);
                 printf("dup %d\n",dif_dwn); */
+                int kk=0;
                 for(int i=up_l;i<=up_r;i++){
                     if(mat[1][i]==0){
                         flg=1;
                         break;
                     }
+                    if(mat[2][i]==0){
+                        kk=1;
+                    }
+                }
+                if(flg==0 && kk==1){
+                    flg=1;
+
+                    for(int ii=up_l;ii<=up_r;ii++){
+                    if(checked[1][ii]=='u'){
+                        flg=0;
+                        break;
+                    }
+                    }
+                    
                 }
             }else if(dif_up>dif_dwn){
                // printf("dup %d\n",dif_up);
+               int kk=0;
                 for(int i=dwn_l;i<=dwn_r;i++){
                     if(mat[2][i]==0){
                         flg=1;
                         break;
                     }
+                     if(mat[1][i]==0){
+                       kk=1;
+                    }
+
                 }
+
+                if(flg==0 && kk==1){
+                    flg=1;
+
+                    for(int ii=dwn_l;ii<=dwn_r;ii++){
+                    if(checked[2][ii]=='u'){
+                        flg=0;
+                        break;
+                        }
+                     }
+                    
+                }
+
+
+
             }else{
                 for(int i=dwn_l;i<=dwn_r;i++){
                     if(mat[2][i]==0 || mat[1][i]==0){
@@ -190,6 +231,22 @@ for(int j=0;j<4;j++){
                         break;
                     }
                 }
+
+                /* if(flg==0){
+                    flg=1;
+
+                    for(int ii=up_l;ii<=up_r;ii++){
+                    if(checked[1][ii]=='u'){
+                        flg=0;
+                        break;
+                    }
+                    if(checked[2][ii]=='u'){
+                        flg=0;
+                        break;
+                    }
+                }
+                    
+                } */
             }
         
         
@@ -216,10 +273,11 @@ for(int j=0;j<4;j++){
                     group[lool][q] = (int *)malloc(2 * sizeof(int));
                 }
                 
-                printf("group lool=%d\n",lool);
+                printf("group lool=%d\n",lool+1);
                 int f_index=0;
                 for(int i=left;i<=right;i++){
                    printf("(%d,%d) ",0,i);
+                   freq[0][i]++;
                    group[lool][f_index][0]=0;
                    group[lool][f_index][1]=i;
                    f_index++;
@@ -227,6 +285,7 @@ for(int j=0;j<4;j++){
                 printf("\n");
                 for(int i=left;i<=right;i++){
                    printf("(%d,%d) ",3,i);
+                   freq[3][i]++;
                    group[lool][f_index][0]=3;
                    group[lool][f_index][1]=i;
                    f_index++;
@@ -343,19 +402,48 @@ for(int j=0;j<4;j++){
              if(dif_up<dif_dwn){
                 /* printf("dup %d\n",dif_up);
                 printf("dup %d\n",dif_dwn); */
+                int kk=0;
                 for(int i=up_l;i<=up_r;i++){
                     if(mat[2][i]==0){
                         flg=1;
                         break;
                     }
+                    if(mat[1][i]==0){
+                        kk=1;
+                    }
+
+                }
+                if(flg==0 && kk==1){
+                    flg=1;
+                    for(int i=up_l;i<=up_r;i++){
+                    if(checked[2][i]=='u'){
+                        flg=0;
+                        break;
+                    }
+                }
                 }
             }else if(dif_up>dif_dwn){
+                int kk=0;
                 for(int i=dwn_l;i<=dwn_r;i++){
                     if(mat[1][i]==0){
                         flg=1;
                         break;
                     }
+                    if(mat[2][i]==0){
+                        kk=1;
+                    }
                 }
+
+                if(flg==0 && kk==1){
+                    flg=1;
+                    for(int i=dwn_l;i<=dwn_l;i++){
+                    if(checked[1][i]=='u'){
+                        flg=0;
+                        break;
+                    }
+                }
+                }
+
             }else{
                 for(int i=dwn_l;i<=dwn_r;i++){
                     if(mat[2][i]==0 || mat[1][i]==0){
@@ -363,6 +451,23 @@ for(int j=0;j<4;j++){
                         break;
                     }
                 }
+
+               /*  if(flg==0){
+                    flg=1;
+                    for(int i=up_l;i<=up_r;i++){
+                    if(checked[2][i]=='u'){
+                        flg=0;
+                        break;
+                    }
+                    if(checked[1][i]=='u'){
+                        flg=0;
+                        break;
+                    }
+
+                }
+                } */
+
+
             }
             
         }
@@ -387,10 +492,11 @@ for(int j=0;j<4;j++){
                 for(int i=0;i<2*(right1-left1+1);i++){
                     group[lool][i] = (int *)malloc(2 * sizeof(int));
                 }
-                printf("group lool=%d\n",lool);
+                printf("group lool=%d\n",lool+1);
                 int s_index=0;
                 for(int i=left1;i<=right1;i++){
                    printf("(%d,%d) ",3,i);
+                   freq[3][i]++;
                    group[lool][s_index][0]=3;
                    group[lool][s_index][1]=i;
                    s_index++;
@@ -398,6 +504,7 @@ for(int j=0;j<4;j++){
                 printf("\n");
                 for(int i=left1;i<=right1;i++){
                    printf("(%d,%d) ",0,i);
+                   freq[0][i]++;
                    group[lool][s_index][0]=0;
                    group[lool][s_index][1]=i;
                    s_index++;
@@ -433,7 +540,7 @@ for(int j=0;j<4;j++){
 
                 
                 lool++;
-            }
+             }
             }
         }
 
@@ -448,12 +555,12 @@ for(int i=0;i<4;i++){
     int flg2=0;
     if(mat[i][0]==1 && checked[i][0]=='u' && mat[i][3]==1){
       //  printf("for %d %d\n",i,0);
-sup=i;
-sdown=i;
-while (sup-1>=0 && mat[sup-1][0]==1 && mat[sup-1][3]==1)
-{
+    sup=i;
+    sdown=i;
+    while (sup-1>=0 && mat[sup-1][0]==1 && mat[sup-1][3]==1)
+    {
     sup--;
-}
+    }
 while (sdown+1<=3 && mat[sdown+1][0]==1 && mat[sdown+1][3]==1)
 {
     sdown++;
@@ -507,8 +614,9 @@ printf("ul %d ,%d ,%d ,%d \n",l_up,l_dwn,r_up,r_dwn);   */
 
 int dif_lft=l_dwn-l_up+1;
 int dif_rght=r_dwn-r_up+1;
-// printf("dup %d\n",dif_lft);
-//printf("dup %d\n",dif_rght); 
+printf("ld %d lup %d rdown %d rup %d\n",l_dwn,l_up,r_dwn,r_up);
+ printf("dup %d\n",dif_lft);
+printf("dup %d\n",dif_rght); 
 
 /* if(l_up==sup && l_dwn==sdown){
     if(sup==sdown && mat[sup][3]==0){
@@ -516,21 +624,56 @@ int dif_rght=r_dwn-r_up+1;
     }
   }
     else */ if(dif_lft<dif_rght){
-        /* printf("dup %d\n",dif_up);
-        printf("dup %d\n",dif_dwn); */
+        /*  printf("dup %d\n",dif_up);
+        printf("dup %d\n",dif_dwn); */ 
+        
+        int kk=0;
         for(int i=l_up;i<=l_dwn;i++){
             if(mat[i][1]==0){
                 flg2=1;
                 break;
             }
+            if(mat[i][2]==0){
+                kk=1;
+            }
         }
+
+        if(flg2==0 && kk==1){
+            flg2=1;
+
+            for(int i=l_up;i<=l_dwn;i++){
+            if(checked[i][1]=='u'){
+                flg2=0;
+                break;
+            }
+        }
+        }
+
+
+
     }else if(dif_lft>dif_rght){
+        
+        int kk=0;
         for(int i=r_up;i<=r_dwn;i++){
             if(mat[i][2]==0){
                 flg2=1;
                 break;
             }
+            if(mat[i][1]==0){
+                kk=1;
+            }
         }
+
+        if(flg2==0 && kk==1){
+            flg2=1;
+            for(int i=r_up;i<=r_dwn;i++){
+            if(checked[i][2]=='u'){
+                flg2=0;
+                break;
+            }
+        }
+        }
+
     }else{
         for(int i=l_up;i<=l_dwn;i++){
             if(mat[i][1]==0 || mat[i][2]==0){
@@ -538,10 +681,19 @@ int dif_rght=r_dwn-r_up+1;
                 break;
             }
         }
-    }
-    
-}
 
+       /*  if(flg2==0){
+            flg2=1;
+            for(int i=l_up;i<=l_dwn;i++){
+            if(checked[i][1]=='u' || checked[i][2]=='u'){
+                flg2=0;
+                break;
+            }
+        }
+    } */
+    
+    }
+    }
 
 
 if(flg2){
@@ -565,13 +717,15 @@ if(flg2){
             group[lool][i] = (int *)malloc(2 * sizeof(int));
         }
         int t_index=0;
-        printf("group lool=%d\n",lool);
+        printf("group lool=%d\n",lool+1);
         for(int i=sup;i<=sdown;i++){
            printf("(%d,%d) ",i,0);
+           freq[i][0]++;
            group[lool][t_index][0]=i;
            group[lool][t_index][1]=0;
            t_index++;
            printf("(%d,%d) ",i,3);
+           freq[i][3]++;
            group[lool][t_index][0]=i;
            group[lool][t_index][1]=3;
            t_index++;
@@ -692,17 +846,50 @@ int dif_rght=r_dwn-r_up+1;
      if(dif_lft<dif_rght){
         /* printf("dup %d\n",dif_up);
         printf("dup %d\n",dif_dwn); */
+        
+        int kk=0;
         for(int i=l_up;i<=l_dwn;i++){
             if(mat[i][1]==0){
                 flg2=1;
                 break;
             }
+             if(mat[i][2]==0){
+               kk=1;
+            }
         }
+
+        if(flg2==0 && kk==1){
+            flg2=1;
+
+             for(int i=l_up;i<=l_dwn;i++){
+                if(checked[i][1]=='u'){
+                flg2=0;
+                break;
+                }
+            }
+            
+        }
+
+
     }else if(dif_lft>dif_rght){
+       
+        int kk=0;
         for(int i=r_up;i<=r_dwn;i++){
             if(mat[i][2]==0){
                 flg2=1;
                 break;
+            }
+            if(mat[i][1]==0){
+               kk=1;
+            }
+        }
+        if(flg2==0 && kk==1){
+            flg2=1;
+             for(int i=r_up;i<=r_dwn;i++){
+                if(checked[i][2]=='u'){
+                flg2=0;
+                break;
+                }
             }
         }
     }else{
@@ -712,6 +899,15 @@ int dif_rght=r_dwn-r_up+1;
                 break;
             }
         }
+       /*  if(flg2==0){
+            flg2=1;
+             for(int i=l_up;i<=l_dwn;i++){
+                if(checked[i][1]=='u' || checked[i][2]=='u'){
+                flg2=0;
+                break;
+                }
+            }
+        } */
     }
     
 
@@ -731,7 +927,7 @@ if(flg2){
             checked[i][3]='c'+lool;
 
         }
-        printf("group lool=%d\n",lool);
+        printf("group lool=%d\n",lool+1);
 
         group[lool] = (int **)malloc(2*(sdown1-sup1+1) * sizeof(int *));
             ind[lool] = 2*(sdown1-sup1+1);
@@ -742,10 +938,12 @@ if(flg2){
         int fo_index=0;
         for(int i=sup1;i<=sdown1;i++){
            printf("(%d,%d) ",i,0);
+           freq[i][0]++;
            group[lool][fo_index][0]=i;
            group[lool][fo_index][1]=0;
            fo_index++;
            printf("(%d,%d) ",i,3);
+           freq[i][3]++;
            group[lool][fo_index][0]=i;
            group[lool][fo_index][1]=3;
            fo_index++;
@@ -977,6 +1175,7 @@ if(flg2){
                
                
                     int mx=0;
+                    int mx_unchecked=0;
                     int depth=0;
                     int x1=l,y1=up,x2=r,y2=d;
                    // printf("up=%d d=%d l=%d r=%d v=%d h=%d \n",up,d,l,r,v,h);
@@ -984,24 +1183,81 @@ if(flg2){
                    // modified in 21-6-25
                 for(int a=up;a<=d;a++){
                     depth++;
+                    
                     int len=0;
+                    int un_checkone=0;
                     for(int b=l;b<=r;b++){
                         if(mat[a][b]==0 ){
+
                             r=b-1;
-                            if(len*depth>mx){
-                                mx=len*depth;
+                            
+                            if(r==3){
+                                r--;
+                            }
+                            if(depth==3){
+                                break;
+                            }
+                            for(int ii=up;ii<=a;ii++){
+                                for(int jj=l;jj<=r;jj++){
+                                    if(checked[ii][jj]=='u'){
+                                        un_checkone++;
+                                    }
+                                }
+                            }
+                            
+                          //  printf("mx_unchecked=%d\n",mx_unchecked);
+                          //  printf("un_checkone for %d %d=%d \n",a,b,un_checkone);
+                            if(un_checkone>mx_unchecked){
+                                mx_unchecked=un_checkone;
                                 x2=r;
                                 y2=a;
+                                mx=len*depth;
+                            }else if(un_checkone==mx_unchecked){
+                                if(len*depth>=mx){
+                                    mx=len*depth;
+                                    x2=r;
+                                    y2=a;
+                                }
                             }
                             break;
                         }else if(mat[a][b]==1 && b==r){
                             len++;
-                            if(len*depth>mx){
+                            if(depth==3){
+                                break;
+                            }
+                            if(len*depth>=mx){
                             x2=b;
                             y2=a;
                             }
+
+                             for(int ii=up;ii<=a;ii++){
+                                for(int jj=l;jj<=b;jj++){
+                                    if(checked[ii][jj]=='u'){
+                                        un_checkone++;
+                                    }
+                                }
+                            }
+                            
+                           // printf("mx_unchecked=%d\n",mx_unchecked);
+                           // printf("un_checkone for %d %d=%d \n",a,b,un_checkone);
+
+                            if(un_checkone>mx_unchecked){
+                                mx_unchecked=un_checkone;
+                                x2=b;
+                                y2=a;
+                                mx=len*depth;
+                            }else if(un_checkone==mx_unchecked){
+                                if(len*depth>=mx){
+                                    x2=b;
+                                    y2=a;
+                                    mx=len*depth;
+                                }
+                            }
+
+
                         }else{
                             len++;
+                            
                         }
                     }
                     
@@ -1018,8 +1274,9 @@ if(flg2){
                 int fi_index=0;
                 for(int a1=y1;a1<=y2;a1++){
                     for(int b1=x1;b1<=x2;b1++){
-                        checked[a1][b1]='c'+lool;
+                        checked[a1][b1]='c'+lool+1;
                         printf("(%d,%d) ",a1,b1);
+                        freq[a1][b1]++;
                         group[lool][fi_index][0]=a1;
                         group[lool][fi_index][1]=b1;
                         fi_index++;
@@ -1090,16 +1347,65 @@ if(flg2){
     
     }
     
+    int real_index=0;
+    int group_index=0;
     char ans_str[index-1];
+     
+    printf("res: \n");
+   // printf("%s\n",res);
+    printf("index=%d\n",index);
     for(int i=0;i<index-1;i++){
-        printf("%c",res[i]);
-        ans_str[i]=res[i];
+        int double_check=0;
+        if(res[i]=='+' || i==0){
+            for(int j=0;j<ind[group_index];j++){
+                if(freq[group[group_index][j][0]][group[group_index][j][1]]==1){
+                 //   printf("for whicch pair :%d %d \n",group[group_index][j][0],group[group_index][j][1]);
+                    double_check=1;
+                    break;
+                }
+            }
+        }
+        /* printf("%c\n",res[i]);
+        printf("for group %d: %d\n",group_index,double_check); */
         
+        if(double_check==1){
+            if(res[i]=='+' && real_index!=0){
+                
+                ans_str[real_index]=res[i];
+                real_index++;
+                
+                printf("+(%d)",i);
+                i++;
+                
+            }else if(res[i]=='+' && real_index==0){
+                i++;
+            }
+            while(res[i]!='+' && i<index-1){
+                printf("%c(%d)",res[i],i);
+                ans_str[real_index]=res[i];
+                real_index++;
+                i++;
+            }
+            i--;
+        }else{
+            ind[group_index]=-1;
+            if(res[i]=='+'){
+              //  ans_str[real_index]=res[i];
+              //  real_index++;
+              //  printf("+");
+                i++;
+            }
+            while(res[i]!='+' && i<index-1){
+                i++;
+            }
+            i--;
+        }
+        group_index++;
     }
     printf("\n");
-  //  strcpy(ans_str, res);
+  // strcpy(ans_str, res);
     
-  printf("groups: \n");
+   printf("groups: \n");
   int group_ind=0;
   while(ind[group_ind]!=0){
     printf("group number: %d\n",group_ind);
@@ -1109,9 +1415,12 @@ if(flg2){
     group_ind++;
   }
 
+
 InitWindow(800, 800, "Matrix Renderer");
 SetTargetFPS(60);
 
+Font myFont = LoadFontEx("D:\\academic2ndyear1stsemester\\project21\\VCR_OSD_MONO_1.001.ttf", 48, 0, 0);
+Font myfont1 = LoadFontEx("D:\\academic2ndyear1stsemester\\project21\\Merriweather-Italic-VariableFont_opsz,wdth,wght.ttf", 48, 0, 0);
 
     // --- 3) Main loop: draw grid + matrix values + result string ---
    
@@ -1131,7 +1440,7 @@ while (!WindowShouldClose())
 
         for(int i = 0; i < 4; i++){
             for(int j = 0; j < 4; j++){
-                DrawText(TextFormat("%d", mat[j][i]), 200+40 + i*100, 200+30 + j*100, 40, WHITE);
+                DrawText( TextFormat("%d", mat[j][i]), 200+40 + i*100, 200+30 + j*100, 40, WHITE);
             }
         }
 
@@ -1139,27 +1448,54 @@ while (!WindowShouldClose())
         int color_index=0;
         int liner=2;
         while(ind[drawing_ind]!=0){
-            
-
-            for(int i=0;i<ind[drawing_ind];i++){
-                DrawRectangleLinesEx((Rectangle){200+liner+group[drawing_ind][i][1]*100,200+liner+group[drawing_ind][i][0]*100,100-liner*2,100-liner*2},5,color[color_index]);
+            if(ind[drawing_ind]==-1){
+                drawing_ind++;
+                continue;
             }
+            
+            int ll=group[drawing_ind][0][0];
+            int upp=group[drawing_ind][0][1];
+            int rr=group[drawing_ind][0][0];
+            int downn=group[drawing_ind][0][1];
+            for(int i=0;i<ind[drawing_ind];i++){
+                DrawRectangleLinesEx((Rectangle){200+liner+group[drawing_ind][i][1]*100,200+liner+group[drawing_ind][i][0]*100,100-liner*2,100-liner*2},2,color[color_index]);
+
+               if(group[drawing_ind][i][0]<ll){
+                   ll=group[drawing_ind][i][0];
+               }if(group[drawing_ind][i][0]>rr){
+                   rr=group[drawing_ind][i][0];
+               }if(group[drawing_ind][i][1]<upp){
+                   upp=group[drawing_ind][i][1];
+               }if(group[drawing_ind][i][1]>downn){
+                   downn=group[drawing_ind][i][1];
+               }
+            }
+            int ltor=rr-ll+1;
+            int utod=downn-upp+1;
+           // DrawRectangleLinesEx((Rectangle){200+liner+ll*100,200+liner+upp*100,utod*100-2*liner,ltor*100-2*liner},3,color[color_index]);
             drawing_ind++;
             color_index++;
-            liner+=5;
+            liner+=6;
         }
 
         
         
-        DrawText(TextFormat("%s", ans_str), 200, 700, 40, WHITE);
+        DrawTextEx(myfont1, TextFormat("%s", ans_str), (Vector2){200, 700}, 40, 2, WHITE);
+
 
         // Draw each cell
         
         EndDrawing();
     }
 
+    
     // --- 4) Cleanup ---
     CloseWindow();
      free(res);
-    return 0;
+
+  
+
+
+return 0;
+
 }
